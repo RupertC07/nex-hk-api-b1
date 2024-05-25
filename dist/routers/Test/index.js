@@ -16,7 +16,7 @@ const testController = new testController_1.default();
  */
 /**
  * @swagger
- * /:
+ * /api/v2:
  *   get:
  *     summary: Retrieve a message
  *     tags: [Default]
