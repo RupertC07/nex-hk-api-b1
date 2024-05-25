@@ -13,7 +13,7 @@ const testController = new TestController();
  */
 /**
  * @swagger
- * /:
+ * /api/v2:
  *   get:
  *     summary: Retrieve a message
  *     tags: [Default]
