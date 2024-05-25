@@ -50,7 +50,7 @@ const options: Options = {
     //   },
     // ],
   },
-  apis: ["src/routers/*/*.ts"],
+  apis: ["src/routers/*/*.{js,ts}"],
 };
 
 const spec = swaggerJsDoc(options);
