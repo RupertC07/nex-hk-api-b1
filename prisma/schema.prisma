@@ -1,11 +1,48 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generator client {
-  provider = "prisma-client-js"
+generator kysely {
+  provider     = "prisma-kysely"
+  output       = "../src/types"
+  fileName     = "db_types.ts"
+  enumFileName = "enums.ts"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id            String          @id @default(dbgenerated("gen_random_uuid()"))
+  name          String
+  age           Int?
+  email         String
+  createdAt     DateTime?       @default(now())
+  updatedAt     DateTime?       @updatedAt
+  adminAccounts AdminAccounts[]
+
+  @@map("admin")
+}
+
+model AdminAccounts {
+  id             String    @id @default(dbgenerated("gen_random_uuid()"))
+  admin_id       String
+  password       String
+  trusted_device String[]
+  remember_token String?
+  createdAt      DateTime? @default(now())
+  updatedAt      DateTime? @updatedAt
+  admin          Admin     @relation(fields: [admin_id], references: [id])
+
+  @@map("admin_accounts")
+}
+
+model Books {
+  id        String    @id @default(dbgenerated("gen_random_uuid()"))
+  name      String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@map("books")
 }
