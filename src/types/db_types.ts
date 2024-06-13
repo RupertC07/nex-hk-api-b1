@@ -27,8 +27,15 @@ export type Books = {
     createdAt: Generated<Timestamp | null>;
     updatedAt: Timestamp | null;
 };
+export type Posts = {
+    id: Generated<string>;
+    name: string;
+    createdAt: Generated<Timestamp | null>;
+    updatedAt: Timestamp | null;
+};
 export type DB = {
     admin: Admin;
     admin_accounts: AdminAccounts;
     books: Books;
+    posts: Posts;
 };

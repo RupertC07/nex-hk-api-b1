@@ -14,7 +14,6 @@ const adminSeeder = async () => {
         .returningAll()
         .executeTakeFirst();
       const password_admin = hashSync("password", 10);
-
       const account = await trx
         .insertInto("admin_accounts")
         .values({
