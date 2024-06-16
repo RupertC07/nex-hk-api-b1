@@ -14,44 +14,392 @@ datasource db {
 }
 
 model Admin {
-  id            String          @id @default(dbgenerated("gen_random_uuid()"))
-  name          String
-  age           Int?
-  email         String
-  createdAt     DateTime?       @default(now())
-  updatedAt     DateTime?       @updatedAt
-  adminAccounts AdminAccounts[]
+  id             BigInt      @id @default(autoincrement())
+  first_name     String
+  last_name      String
+  birthdate      String?
+  email          String
+  contact_number String?
+  role           String      @default("admin")
+  created_at     DateTime?   @default(now())
+  updated_at     DateTime?   @updatedAt
+  account        Account[]
+  AdminLogs      AdminLogs[]
 
   @@map("admin")
 }
 
-model AdminAccounts {
-  id             String    @id @default(dbgenerated("gen_random_uuid()"))
-  admin_id       String
+model Account {
+  id             BigInt    @id @default(autoincrement())
   password       String
-  trusted_device String[]
-  remember_token String?
-  createdAt      DateTime? @default(now())
-  updatedAt      DateTime? @updatedAt
-  admin          Admin     @relation(fields: [admin_id], references: [id])
+  admin_id       BigInt?
+  coordinator_id BigInt?
+  scholar_id     BigInt?
+  is_logged_in   Boolean   @default(false)
+  created_at     DateTime? @default(now())
+  updated_at     DateTime? @updatedAt
+  deleted_at     DateTime?
 
-  @@map("admin_accounts")
+  admin           Admin?          @relation(fields: [admin_id], references: [id])
+  coordinator     Coordinator?    @relation(fields: [coordinator_id], references: [id])
+  sholar          Scholar?        @relation(fields: [scholar_id], references: [id])
+  trusted_devices TrustedDevice[]
+
+  @@map("account")
 }
 
-model Books {
-  id        String    @id @default(dbgenerated("gen_random_uuid()"))
-  name      String
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+model TrustedDevice {
+  id         Int       @id @default(autoincrement())
+  account_id BigInt
+  name       String?
+  code       String?
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+  deleted_at DateTime?
+  account    Account   @relation(fields: [account_id], references: [id])
 
-  @@map("books")
+  @@map("trusted_device")
 }
 
-model Posts {
-  id        String    @id @default(dbgenerated("gen_random_uuid()"))
-  name      String
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+model Campus {
+  id           BigInt         @id @default(autoincrement())
+  name         String
+  description  String?
+  address      String
+  code         String?
+  created_at   DateTime?      @default(now())
+  updated_at   DateTime?      @updatedAt
+  deleted_at   DateTime?
+  coordinator  Coordinator[]
+  HkInfo       HkInfo[]
+  DutySchedule DutySchedule[]
 
-  @@map("posts")
+  @@map("campus")
+}
+
+model Coordinator {
+  id             BigInt    @id @default(autoincrement())
+  first_name     String
+  middle_name    String?
+  last_name      String
+  birthdate      String
+  email          String
+  contact_number String
+  campus_id      BigInt
+  role           String?   @default("coordinator")
+  created_at     DateTime? @default(now())
+  updated_at     DateTime? @updatedAt
+  deleted_at     DateTime?
+
+  campus          Campus            @relation(fields: [campus_id], references: [id])
+  account         Account[]
+  CoordinatorLogs CoordinatorLogs[]
+
+  @@map("coordinator")
+}
+
+model Semester {
+  id                     BigInt                   @id @default(autoincrement())
+  term                   String
+  sy                     String
+  status                 String?                  @default("active")
+  created_at             DateTime?                @default(now())
+  updated_at             DateTime?                @updatedAt
+  deleted_at             DateTime?
+  AcademicInfo           AcademicInfo[]
+  DutySchedule           DutySchedule[]
+  DutyScheduleAssignment DutyScheduleAssignment[]
+  DutyRecord             DutyRecord[]
+
+  @@map("semester")
+}
+
+model Scholar {
+  id                     BigInt                   @id @default(autoincrement())
+  first_name             String
+  middle_name            String?
+  last_name              String?
+  student_number         String
+  email                  String
+  contact_number         String
+  address                String
+  birthdate              String
+  created_at             DateTime?                @default(now())
+  updated_at             DateTime?                @updatedAt
+  deleted_at             DateTime?
+  role                   String?                  @default("scholar")
+  hk_info                HkInfo[]
+  Account                Account[]
+  ScholarGuardian        ScholarGuardian[]
+  AcademicInfo           AcademicInfo[]
+  AcademicInfoDuplicate  AcademicInfoDuplicate[]
+  DutyScheduleAssignment DutyScheduleAssignment[]
+  DutyRecord             DutyRecord[]
+  ScholarLogs            ScholarLogs[]
+
+  @@map("scholar")
+}
+
+model HkInfo {
+  id           BigInt    @id @default(autoincrement())
+  hk_number    String?
+  hk_type      String
+  year_starter Int
+  scholar_id   BigInt
+  campus_id    BigInt
+  created_at   DateTime? @default(now())
+  updated_at   DateTime? @updatedAt
+  deleted_at   DateTime?
+  campus       Campus    @relation(fields: [campus_id], references: [id])
+  scholar      Scholar   @relation(fields: [scholar_id], references: [id])
+
+  @@map("hk_info")
+}
+
+model ScholarGuardian {
+  id             BigInt    @id @default(autoincrement())
+  guardian_fname String
+  guardian_lname String
+  contact_num    String
+  email          String
+  scholar_id     BigInt
+  created_at     DateTime? @default(now())
+  updated_at     DateTime? @updatedAt
+  deleted_at     DateTime?
+  scholar        Scholar   @relation(fields: [scholar_id], references: [id])
+
+  @@map("scholar_guardian")
+}
+
+model AcademicInfo {
+  id          BigInt    @id @default(autoincrement())
+  scholar_id  BigInt
+  course      String
+  year_level  Int
+  section     String?
+  is_regular  Boolean
+  is_enrolled Boolean
+  semester_id BigInt
+  sem         Semester  @relation(fields: [semester_id], references: [id])
+  scholar     Scholar   @relation(fields: [scholar_id], references: [id])
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt
+  deleted_at  DateTime?
+
+  @@map("academic_info")
+}
+
+model AcademicInfoDuplicate {
+  id          BigInt    @id @default(autoincrement())
+  course      String
+  year_level  Int
+  section     String?
+  is_regular  Boolean
+  is_enrolled Boolean
+  scholar_id  BigInt
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt
+  deleted_at  DateTime?
+  scholar     Scholar   @relation(fields: [scholar_id], references: [id])
+
+  @@map("academic_info_duplicate")
+}
+
+model Duty {
+  id             BigInt         @id @default(autoincrement())
+  name           String
+  acronym        String
+  description    String
+  required_hours Int
+  created_at     DateTime?      @default(now())
+  updated_at     DateTime?      @updatedAt
+  deleted_at     DateTime?
+  DutySchedule   DutySchedule[]
+
+  @@map("duty")
+}
+
+model QrHolder {
+  id             BigInt         @id @default(autoincrement())
+  first_name     String
+  middle_name    String?
+  last_name      String
+  department     String
+  email          String
+  contact_number String
+  role           String?        @default("qr_holder")
+  created_at     DateTime?      @default(now())
+  updated_at     DateTime?      @updatedAt
+  deleted_at     DateTime?
+  QrCode         QrCode[]
+  QrHolderLogs   QrHolderLogs[]
+
+  @@map("qr_holder")
+}
+
+model QrCode {
+  id              BigInt       @id @default(autoincrement())
+  qr_holder_id    BigInt
+  code            String
+  expiration_date DateTime?
+  type            String?      @default("regular")
+  hours           Int?
+  minutes         Int?
+  purpose         String?
+  location        String?
+  date_time       DateTime?
+  created_at      DateTime?    @default(now())
+  updated_at      DateTime?    @updatedAt
+  deleted_at      DateTime?
+  qr_holder       QrHolder     @relation(fields: [qr_holder_id], references: [id])
+  DutyRecord      DutyRecord[]
+
+  @@map("qr_code")
+}
+
+model DutySchedule {
+  id                     BigInt                   @id @default(autoincrement())
+  day                    String
+  time_start             String
+  time_end               String
+  location               String
+  class_subject          String?
+  class_type             String?
+  class_level            String?
+  department             String?
+  max_slot               String?
+  duty_id                BigInt
+  campus_id              BigInt
+  semester_id            BigInt
+  duty                   Duty                     @relation(fields: [duty_id], references: [id])
+  campus                 Campus                   @relation(fields: [campus_id], references: [id])
+  semester               Semester                 @relation(fields: [semester_id], references: [id])
+  created_at             DateTime?                @default(now())
+  updated_at             DateTime?                @updatedAt
+  deleted_at             DateTime?
+  is_visible_to_scholar  Boolean                  @default(true)
+  DutyScheduleAssignment DutyScheduleAssignment[]
+  DutyRecord             DutyRecord[]
+
+  @@map("duty_schedule")
+}
+
+model DutyAssignment {
+  id          BigInt    @id @default(autoincrement())
+  scholar_id  BigInt
+  duty_id     BigInt
+  semester_id BigInt
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt
+  deleted_at  DateTime?
+
+  @@map("duty_assignment")
+}
+
+model DutyScheduleAssignment {
+  id                BigInt    @id @default(autoincrement())
+  schedule_id       BigInt
+  scholar_id        BigInt
+  semester_id       BigInt
+  assignment_status String    @default("pending")
+  created_at        DateTime? @default(now())
+  updated_at        DateTime? @updatedAt
+  deleted_at        DateTime?
+
+  scholar  Scholar      @relation(fields: [scholar_id], references: [id])
+  semester Semester     @relation(fields: [semester_id], references: [id])
+  schedule DutySchedule @relation(fields: [schedule_id], references: [id])
+
+  @@map("duty_schedule_assignment")
+}
+
+model DutyRecord {
+  id             BigInt    @id @default(autoincrement())
+  scholar_id     BigInt
+  schedule_id    BigInt?
+  semester_id    BigInt
+  computed_hours Int
+  hours          String
+  minutes        String
+  type           String?   @default("regular")
+  qr_code_id     BigInt
+  status         String?   @default("pending")
+  created_at     DateTime? @default(now())
+  updated_at     DateTime? @updatedAt
+  deleted_at     DateTime?
+
+  scholar  Scholar       @relation(fields: [scholar_id], references: [id])
+  schedule DutySchedule? @relation(fields: [schedule_id], references: [id])
+  semester Semester      @relation(fields: [semester_id], references: [id])
+  qr_code  QrCode        @relation(fields: [qr_code_id], references: [id])
+
+  @@map("duty_record")
+}
+
+model AdminLogs {
+  id          BigInt    @id @default(autoincrement())
+  admin_id    BigInt
+  action      String
+  description String
+  status      String    @default("Success")
+  oldData     Json?
+  newData     Json?
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt
+  deleted_at  DateTime?
+
+  admin Admin @relation(fields: [admin_id], references: [id])
+
+  @@map("admin_logs")
+}
+
+model CoordinatorLogs {
+  id             BigInt    @id @default(autoincrement())
+  coordinator_id BigInt
+  action         String
+  description    String
+  status         String    @default("Success")
+  oldData        Json?
+  newData        Json?
+  created_at     DateTime? @default(now())
+  updated_at     DateTime? @updatedAt
+  deleted_at     DateTime?
+
+  coordinator Coordinator @relation(fields: [coordinator_id], references: [id])
+
+  @@map("coordinator_logs")
+}
+
+model ScholarLogs {
+  id          BigInt    @id @default(autoincrement())
+  scholar_id  BigInt
+  action      String
+  description String
+  status      String    @default("Success")
+  oldData     Json?
+  newData     Json?
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt
+  deleted_at  DateTime?
+
+  scholar Scholar @relation(fields: [scholar_id], references: [id])
+
+  @@map("scholar_logs")
+}
+
+model QrHolderLogs {
+  id           BigInt    @id @default(autoincrement())
+  qr_holder_id BigInt
+  action       String
+  description  String
+  status       String    @default("Success")
+  oldData      Json?
+  newData      Json?
+  created_at   DateTime? @default(now())
+  updated_at   DateTime? @updatedAt
+  deleted_at   DateTime?
+
+  qr_holder QrHolder @relation(fields: [qr_holder_id], references: [id])
+
+  @@map("qr_holder_logs")
 }

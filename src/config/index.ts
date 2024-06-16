@@ -18,6 +18,10 @@ const config = {
     local: `http://localhost:${process.env.PORT || 8000}/api/v2`,
     forward: `${process.env.PORT_FORWARD_URL}api/v2`,
   },
+  email: {
+    address: process.env.EMAIL,
+    password: process.env.PASSWORD,
+  },
 };
 
 export default config;
