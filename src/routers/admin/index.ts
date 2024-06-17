@@ -8,6 +8,7 @@ import {
   sessionResetValidation,
 } from "../../middlewares/session";
 import apiKeyAuth from "../../middlewares/apiKey";
+import AdminMiddleware from "../../middlewares/admin";
 
 const adminRoute = Router();
 const adminController = new AdminController();
@@ -225,6 +226,20 @@ adminRoute.put(
   apiKeyAuth,
   sessionResetValidation,
   adminController.resetVerification
+);
+
+adminRoute.get(
+  "/test",
+  apiKeyAuth,
+  AdminMiddleware.authToken,
+  adminController.get
+);
+
+adminRoute.post(
+  "/update",
+  apiKeyAuth,
+  AdminMiddleware.authToken,
+  adminController.update
 );
 
 export default adminRoute;

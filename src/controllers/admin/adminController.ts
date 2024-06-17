@@ -1,13 +1,15 @@
 import session from "express-session";
 import { CustomSession } from "../../types/session";
 import Mailer from "../../utils/Mailer";
-import { ErrorRequestHandler, Request, Response } from "express";
+import { ErrorRequestHandler, Request, Response, response } from "express";
 import AppResponse from "../../utils/AppResponse";
 import AuthAction from "../../actions/admin/authAction";
 import { User } from "../../types/custom";
 import { omit, result } from "lodash";
 import generateOtp from "../../utils/otpGenerator";
 import otpSession from "../../utils/session";
+import AdminShowAction from "../../actions/admin/adminShowAction";
+import AdminUpdateAction from "../../actions/admin/adminUpdateAction";
 
 const mailer = new Mailer();
 
@@ -26,7 +28,7 @@ class AdminController {
           res: res,
           data: null,
           message: `Error : ${validation.error.errors}`,
-          code: 401,
+          code: 400,
         });
       }
 
@@ -175,6 +177,58 @@ class AdminController {
         res: res,
         data: null,
         message: "Internal server error",
+        code: 500,
+      });
+    }
+  }
+
+  async get(req: Request, res: Response) {
+    return AppResponse.sendSuccess({
+      res: res,
+      data: req.adminData,
+      message: "Success",
+      code: 200,
+    });
+  }
+
+  async update(req: Request, res: Response) {
+    try {
+      const admin = req.adminData;
+      const admin_is_found = await AdminShowAction.execute(admin.id);
+      if (!admin_is_found) {
+        return AppResponse.sendError({
+          res: res,
+          data: null,
+          message: "Admin account not found",
+          code: 404,
+        });
+      }
+
+      const validation = AdminUpdateAction.validate(req.body);
+
+      if (!validation.success) {
+        return AppResponse.sendError({
+          res: res,
+          data: null,
+          message: `Error : ${validation.error.errors[0].message}`,
+          code: 400,
+        });
+      }
+
+      const update = await AdminUpdateAction.execute(req.body, admin.id);
+
+      return AppResponse.sendSuccess({
+        res: res,
+        data: update,
+        message: "Admin has been successfully updated",
+        code: 200,
+      });
+    } catch (error: any) {
+      console.log(error);
+      return AppResponse.sendError({
+        res: res,
+        data: null,
+        message: "Internal Server Error",
         code: 500,
       });
     }
