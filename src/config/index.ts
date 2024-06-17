@@ -1,4 +1,5 @@
 import "dotenv/config";
+import session from "express-session";
 
 const config = {
   app: {
@@ -21,6 +22,10 @@ const config = {
   email: {
     address: process.env.EMAIL,
     password: process.env.PASSWORD,
+  },
+  session: {
+    secret: process.env.SESSION_KEY,
+    age: parseInt(process.env.SESSION_EXPIRATION),
   },
 };
 

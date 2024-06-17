@@ -10,23 +10,23 @@ const adminSeeder = async () => {
         .values({
           first_name: "John Doe",
           last_name: "Biden",
-          email: "sample@email.com",
+          email: "rupertcaingal.dev@gmail.com",
         })
         .returningAll()
         .executeTakeFirst();
       const password_admin = hashSync("password", 10);
-      // const account = await trx
-      //   .insertInto("admin_accounts")
-      //   .values({
-      //     admin_id: admin.id,
-      //     password: password_admin,
-      //   })
-      //   .returningAll()
-      //   .executeTakeFirst();
+      const account = await trx
+        .insertInto("account")
+        .values({
+          admin_id: admin.id,
+          password: password_admin,
+        })
+        .returningAll()
+        .executeTakeFirst();
 
       return {
         admin,
-        // account,
+        account,
       };
     });
 

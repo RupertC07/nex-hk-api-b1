@@ -1,19 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import session from "express-session";
 import { Request } from "express";
-
-interface CustomSession extends session.Session {
-  userData?: {
-    [sessionId: string]: {
-      otpCode?: string;
-      userData?: unknown;
-      otpExpiration: unknown;
-      attempts: any;
-
-      // Add other properties if needed
-    };
-  };
-}
+import { CustomSession } from "../types/session";
 
 type User = {
   email?: String;
@@ -109,10 +97,10 @@ class otpSession {
         userData.userData = null;
       }
       if (userData.attempts !== undefined) {
-        userData.attempts = null as unknown as string | undefined;
+        userData.attempts = null as unknown as number | undefined;
       }
       if (userData.otpExpiration !== undefined) {
-        userData.otpExpiration = null as unknown as string | undefined;
+        userData.otpExpiration = null as unknown as number | undefined;
       }
 
       return true;
