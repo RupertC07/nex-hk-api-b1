@@ -3,6 +3,7 @@ import AppResponse from "../../utils/AppResponse";
 
 class TestController {
   async index(req: Request, res: Response) {
+    console.log("User-Agent:", req.headers["user-agent"]);
     return AppResponse.sendSuccess({
       res: res,
       data: null,

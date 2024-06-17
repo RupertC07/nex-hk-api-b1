@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Admin {
-  id             BigInt      @id @default(autoincrement())
+  id             Int         @id @default(autoincrement())
   first_name     String
   last_name      String
   birthdate      String?
@@ -27,11 +27,11 @@ model Admin {
 }
 
 model Account {
-  id             BigInt    @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   password       String
-  admin_id       BigInt?
-  coordinator_id BigInt?
-  scholar_id     BigInt?
+  admin_id       Int?
+  coordinator_id Int?
+  scholar_id     Int?
   is_logged_in   Boolean   @default(false)
   created_at     DateTime? @default(now())
   updated_at     DateTime? @updatedAt
@@ -47,7 +47,7 @@ model Account {
 
 model TrustedDevice {
   id         Int       @id @default(autoincrement())
-  account_id BigInt
+  account_id Int
   name       String?
   code       String?
   created_at DateTime? @default(now())
@@ -59,7 +59,7 @@ model TrustedDevice {
 }
 
 model Campus {
-  id           BigInt         @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   name         String
   description  String?
   address      String
@@ -75,14 +75,14 @@ model Campus {
 }
 
 model Coordinator {
-  id             BigInt    @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   first_name     String
   middle_name    String?
   last_name      String
   birthdate      String
   email          String
   contact_number String
-  campus_id      BigInt
+  campus_id      Int
   role           String?   @default("coordinator")
   created_at     DateTime? @default(now())
   updated_at     DateTime? @updatedAt
@@ -96,7 +96,7 @@ model Coordinator {
 }
 
 model Semester {
-  id                     BigInt                   @id @default(autoincrement())
+  id                     Int                      @id @default(autoincrement())
   term                   String
   sy                     String
   status                 String?                  @default("active")
@@ -112,7 +112,7 @@ model Semester {
 }
 
 model Scholar {
-  id                     BigInt                   @id @default(autoincrement())
+  id                     Int                      @id @default(autoincrement())
   first_name             String
   middle_name            String?
   last_name              String?
@@ -138,12 +138,12 @@ model Scholar {
 }
 
 model HkInfo {
-  id           BigInt    @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   hk_number    String?
   hk_type      String
   year_starter Int
-  scholar_id   BigInt
-  campus_id    BigInt
+  scholar_id   Int
+  campus_id    Int
   created_at   DateTime? @default(now())
   updated_at   DateTime? @updatedAt
   deleted_at   DateTime?
@@ -154,12 +154,12 @@ model HkInfo {
 }
 
 model ScholarGuardian {
-  id             BigInt    @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   guardian_fname String
   guardian_lname String
   contact_num    String
   email          String
-  scholar_id     BigInt
+  scholar_id     Int
   created_at     DateTime? @default(now())
   updated_at     DateTime? @updatedAt
   deleted_at     DateTime?
@@ -169,14 +169,14 @@ model ScholarGuardian {
 }
 
 model AcademicInfo {
-  id          BigInt    @id @default(autoincrement())
-  scholar_id  BigInt
+  id          Int       @id @default(autoincrement())
+  scholar_id  Int
   course      String
   year_level  Int
   section     String?
   is_regular  Boolean
   is_enrolled Boolean
-  semester_id BigInt
+  semester_id Int
   sem         Semester  @relation(fields: [semester_id], references: [id])
   scholar     Scholar   @relation(fields: [scholar_id], references: [id])
   created_at  DateTime? @default(now())
@@ -187,13 +187,13 @@ model AcademicInfo {
 }
 
 model AcademicInfoDuplicate {
-  id          BigInt    @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   course      String
   year_level  Int
   section     String?
   is_regular  Boolean
   is_enrolled Boolean
-  scholar_id  BigInt
+  scholar_id  Int
   created_at  DateTime? @default(now())
   updated_at  DateTime? @updatedAt
   deleted_at  DateTime?
@@ -203,7 +203,7 @@ model AcademicInfoDuplicate {
 }
 
 model Duty {
-  id             BigInt         @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   name           String
   acronym        String
   description    String
@@ -217,7 +217,7 @@ model Duty {
 }
 
 model QrHolder {
-  id             BigInt         @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   first_name     String
   middle_name    String?
   last_name      String
@@ -235,8 +235,8 @@ model QrHolder {
 }
 
 model QrCode {
-  id              BigInt       @id @default(autoincrement())
-  qr_holder_id    BigInt
+  id              Int          @id @default(autoincrement())
+  qr_holder_id    Int
   code            String
   expiration_date DateTime?
   type            String?      @default("regular")
@@ -255,7 +255,7 @@ model QrCode {
 }
 
 model DutySchedule {
-  id                     BigInt                   @id @default(autoincrement())
+  id                     Int                      @id @default(autoincrement())
   day                    String
   time_start             String
   time_end               String
@@ -265,9 +265,9 @@ model DutySchedule {
   class_level            String?
   department             String?
   max_slot               String?
-  duty_id                BigInt
-  campus_id              BigInt
-  semester_id            BigInt
+  duty_id                Int
+  campus_id              Int
+  semester_id            Int
   duty                   Duty                     @relation(fields: [duty_id], references: [id])
   campus                 Campus                   @relation(fields: [campus_id], references: [id])
   semester               Semester                 @relation(fields: [semester_id], references: [id])
@@ -282,10 +282,10 @@ model DutySchedule {
 }
 
 model DutyAssignment {
-  id          BigInt    @id @default(autoincrement())
-  scholar_id  BigInt
-  duty_id     BigInt
-  semester_id BigInt
+  id          Int       @id @default(autoincrement())
+  scholar_id  Int
+  duty_id     Int
+  semester_id Int
   created_at  DateTime? @default(now())
   updated_at  DateTime? @updatedAt
   deleted_at  DateTime?
@@ -294,10 +294,10 @@ model DutyAssignment {
 }
 
 model DutyScheduleAssignment {
-  id                BigInt    @id @default(autoincrement())
-  schedule_id       BigInt
-  scholar_id        BigInt
-  semester_id       BigInt
+  id                Int       @id @default(autoincrement())
+  schedule_id       Int
+  scholar_id        Int
+  semester_id       Int
   assignment_status String    @default("pending")
   created_at        DateTime? @default(now())
   updated_at        DateTime? @updatedAt
@@ -311,15 +311,15 @@ model DutyScheduleAssignment {
 }
 
 model DutyRecord {
-  id             BigInt    @id @default(autoincrement())
-  scholar_id     BigInt
-  schedule_id    BigInt?
-  semester_id    BigInt
+  id             Int       @id @default(autoincrement())
+  scholar_id     Int
+  schedule_id    Int?
+  semester_id    Int
   computed_hours Int
   hours          String
   minutes        String
   type           String?   @default("regular")
-  qr_code_id     BigInt
+  qr_code_id     Int
   status         String?   @default("pending")
   created_at     DateTime? @default(now())
   updated_at     DateTime? @updatedAt
@@ -334,8 +334,8 @@ model DutyRecord {
 }
 
 model AdminLogs {
-  id          BigInt    @id @default(autoincrement())
-  admin_id    BigInt
+  id          Int       @id @default(autoincrement())
+  admin_id    Int
   action      String
   description String
   status      String    @default("Success")
@@ -351,8 +351,8 @@ model AdminLogs {
 }
 
 model CoordinatorLogs {
-  id             BigInt    @id @default(autoincrement())
-  coordinator_id BigInt
+  id             Int       @id @default(autoincrement())
+  coordinator_id Int
   action         String
   description    String
   status         String    @default("Success")
@@ -368,8 +368,8 @@ model CoordinatorLogs {
 }
 
 model ScholarLogs {
-  id          BigInt    @id @default(autoincrement())
-  scholar_id  BigInt
+  id          Int       @id @default(autoincrement())
+  scholar_id  Int
   action      String
   description String
   status      String    @default("Success")
@@ -385,8 +385,8 @@ model ScholarLogs {
 }
 
 model QrHolderLogs {
-  id           BigInt    @id @default(autoincrement())
-  qr_holder_id BigInt
+  id           Int       @id @default(autoincrement())
+  qr_holder_id Int
   action       String
   description  String
   status       String    @default("Success")
