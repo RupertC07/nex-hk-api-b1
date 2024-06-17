@@ -65,6 +65,12 @@ class Mailer {
     return await this.sendEmail(email, subject, data, "index");
   }
 
+  async sendVerificationCode(code: string, email: string) {
+    const subject = "Verify your account";
+    const content = `This is your verification code : ${code}. Do not share this to others`;
+    return await this.sendEmail(email, subject, null, null, content);
+  }
+
   async testSenderNoHtml(message: string, email: string) {
     const subject = "This is a sample sample email";
     // const data = { message: message };

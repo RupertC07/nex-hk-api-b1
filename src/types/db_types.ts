@@ -201,6 +201,18 @@ export type QrHolder = {
     updated_at: Timestamp | null;
     deleted_at: Timestamp | null;
 };
+export type QrHolderLogs = {
+    id: Generated<string>;
+    qr_holder_id: string;
+    action: string;
+    description: string;
+    status: Generated<string>;
+    oldData: unknown | null;
+    newData: unknown | null;
+    created_at: Generated<Timestamp | null>;
+    updated_at: Timestamp | null;
+    deleted_at: Timestamp | null;
+};
 export type Scholar = {
     id: Generated<string>;
     first_name: string;
@@ -274,6 +286,7 @@ export type DB = {
     hk_info: HkInfo;
     qr_code: QrCode;
     qr_holder: QrHolder;
+    qr_holder_logs: QrHolderLogs;
     scholar: Scholar;
     scholar_guardian: ScholarGuardian;
     scholar_logs: ScholarLogs;
