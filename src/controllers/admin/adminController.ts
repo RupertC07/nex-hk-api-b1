@@ -10,6 +10,9 @@ import generateOtp from "../../utils/otpGenerator";
 import otpSession from "../../utils/session";
 import AdminShowAction from "../../actions/admin/adminShowAction";
 import AdminUpdateAction from "../../actions/admin/adminUpdateAction";
+import ChangePassword from "../../actions/shared/changePassword";
+import AdminGetAction from "../../actions/admin/adminGetAction";
+import bcrypt from "bcrypt";
 
 const mailer = new Mailer();
 
@@ -229,6 +232,66 @@ class AdminController {
         res: res,
         data: null,
         message: "Internal Server Error",
+        code: 500,
+      });
+    }
+  }
+
+  async changePassword(req: Request, res: Response) {
+    try {
+      const admin = req.adminData;
+
+      const validate = ChangePassword.validate(req.body);
+      if (validate.error) {
+        return AppResponse.sendError({
+          res: res,
+          data: null,
+          message: validate.error.errors[0].message,
+          code: 400,
+        });
+      }
+
+      const adminInfo = await AdminGetAction.execute(admin.id);
+
+      if (!adminInfo) {
+        return AppResponse.sendError({
+          res: res,
+          data: null,
+          message: "User not found",
+          code: 403,
+        });
+      }
+
+      const passwordIsValid = bcrypt.compareSync(
+        validate.data.old_password,
+        adminInfo.account[0].password
+      );
+
+      if (!passwordIsValid) {
+        return AppResponse.sendError({
+          res: res,
+          data: null,
+          message: "Current password is invalid",
+          code: 403,
+        });
+      }
+
+      const passwordUpdate = await ChangePassword.execute(
+        adminInfo.account[0].id,
+        validate.data.new_password
+      );
+
+      return AppResponse.sendSuccess({
+        res: res,
+        data: null,
+        message: "Password has been successfully changed",
+        code: 200,
+      });
+    } catch (error) {
+      return AppResponse.sendError({
+        res: res,
+        data: null,
+        message: `Internal server error : ${error.message}`,
         code: 500,
       });
     }

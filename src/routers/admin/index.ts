@@ -242,4 +242,11 @@ adminRoute.post(
   adminController.update
 );
 
+adminRoute.post(
+  "/change-password",
+  apiKeyAuth,
+  AdminMiddleware.authToken,
+  adminController.changePassword
+);
+
 export default adminRoute;
