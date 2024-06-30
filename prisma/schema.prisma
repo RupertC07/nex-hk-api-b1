@@ -205,7 +205,7 @@ model AcademicInfoDuplicate {
 model Duty {
   id             Int            @id @default(autoincrement())
   name           String
-  acronym        String
+  acronym        String?
   description    String
   required_hours Int
   created_at     DateTime?      @default(now())
