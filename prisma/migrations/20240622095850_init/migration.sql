@@ -1,86 +1,77 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "admin" (
+    "id" SERIAL NOT NULL,
+    "first_name" TEXT NOT NULL,
+    "last_name" TEXT NOT NULL,
+    "birthdate" TEXT,
+    "email" TEXT NOT NULL,
+    "contact_number" TEXT,
+    "role" TEXT NOT NULL DEFAULT 'admin',
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
 
-  - The primary key for the `account` table will be changed. If it partially fails, the table could be left without primary key constraint.
-  - You are about to alter the column `id` on the `account` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
-  - You are about to alter the column `admin_id` on the `account` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
-  - You are about to alter the column `coordinator_id` on the `account` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
-  - You are about to alter the column `scholar_id` on the `account` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
-  - The primary key for the `admin` table will be changed. If it partially fails, the table could be left without primary key constraint.
-  - You are about to alter the column `id` on the `admin` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
-  - The primary key for the `campus` table will be changed. If it partially fails, the table could be left without primary key constraint.
-  - You are about to alter the column `id` on the `campus` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
-  - The primary key for the `coordinator` table will be changed. If it partially fails, the table could be left without primary key constraint.
-  - You are about to alter the column `id` on the `coordinator` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
-  - You are about to alter the column `campus_id` on the `coordinator` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
-  - The primary key for the `hk_info` table will be changed. If it partially fails, the table could be left without primary key constraint.
-  - You are about to alter the column `id` on the `hk_info` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
-  - You are about to alter the column `scholar_id` on the `hk_info` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
-  - You are about to alter the column `campus_id` on the `hk_info` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
-  - The primary key for the `scholar` table will be changed. If it partially fails, the table could be left without primary key constraint.
-  - You are about to alter the column `id` on the `scholar` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
-  - You are about to alter the column `account_id` on the `trusted_device` table. The data in that column could be lost. The data in that column will be cast from `BigInt` to `Integer`.
+    CONSTRAINT "admin_pkey" PRIMARY KEY ("id")
+);
 
-*/
--- DropForeignKey
-ALTER TABLE "account" DROP CONSTRAINT "account_admin_id_fkey";
+-- CreateTable
+CREATE TABLE "account" (
+    "id" SERIAL NOT NULL,
+    "password" TEXT NOT NULL,
+    "admin_id" INTEGER,
+    "coordinator_id" INTEGER,
+    "scholar_id" INTEGER,
+    "is_logged_in" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+    "deleted_at" TIMESTAMP(3),
 
--- DropForeignKey
-ALTER TABLE "account" DROP CONSTRAINT "account_coordinator_id_fkey";
+    CONSTRAINT "account_pkey" PRIMARY KEY ("id")
+);
 
--- DropForeignKey
-ALTER TABLE "account" DROP CONSTRAINT "account_scholar_id_fkey";
+-- CreateTable
+CREATE TABLE "trusted_device" (
+    "id" SERIAL NOT NULL,
+    "account_id" INTEGER NOT NULL,
+    "name" TEXT,
+    "code" TEXT,
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+    "deleted_at" TIMESTAMP(3),
 
--- DropForeignKey
-ALTER TABLE "coordinator" DROP CONSTRAINT "coordinator_campus_id_fkey";
+    CONSTRAINT "trusted_device_pkey" PRIMARY KEY ("id")
+);
 
--- DropForeignKey
-ALTER TABLE "hk_info" DROP CONSTRAINT "hk_info_campus_id_fkey";
+-- CreateTable
+CREATE TABLE "campus" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "address" TEXT NOT NULL,
+    "code" TEXT,
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+    "deleted_at" TIMESTAMP(3),
 
--- DropForeignKey
-ALTER TABLE "hk_info" DROP CONSTRAINT "hk_info_scholar_id_fkey";
+    CONSTRAINT "campus_pkey" PRIMARY KEY ("id")
+);
 
--- DropForeignKey
-ALTER TABLE "trusted_device" DROP CONSTRAINT "trusted_device_account_id_fkey";
+-- CreateTable
+CREATE TABLE "coordinator" (
+    "id" SERIAL NOT NULL,
+    "first_name" TEXT NOT NULL,
+    "middle_name" TEXT,
+    "last_name" TEXT NOT NULL,
+    "birthdate" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "contact_number" TEXT NOT NULL,
+    "campus_id" INTEGER NOT NULL,
+    "role" TEXT DEFAULT 'coordinator',
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+    "deleted_at" TIMESTAMP(3),
 
--- AlterTable
-ALTER TABLE "account" DROP CONSTRAINT "account_pkey",
-ALTER COLUMN "id" SET DATA TYPE SERIAL,
-ALTER COLUMN "admin_id" SET DATA TYPE INTEGER,
-ALTER COLUMN "coordinator_id" SET DATA TYPE INTEGER,
-ALTER COLUMN "scholar_id" SET DATA TYPE INTEGER,
-ADD CONSTRAINT "account_pkey" PRIMARY KEY ("id");
-
--- AlterTable
-ALTER TABLE "admin" DROP CONSTRAINT "admin_pkey",
-ALTER COLUMN "id" SET DATA TYPE SERIAL,
-ADD CONSTRAINT "admin_pkey" PRIMARY KEY ("id");
-
--- AlterTable
-ALTER TABLE "campus" DROP CONSTRAINT "campus_pkey",
-ALTER COLUMN "id" SET DATA TYPE SERIAL,
-ADD CONSTRAINT "campus_pkey" PRIMARY KEY ("id");
-
--- AlterTable
-ALTER TABLE "coordinator" DROP CONSTRAINT "coordinator_pkey",
-ALTER COLUMN "id" SET DATA TYPE SERIAL,
-ALTER COLUMN "campus_id" SET DATA TYPE INTEGER,
-ADD CONSTRAINT "coordinator_pkey" PRIMARY KEY ("id");
-
--- AlterTable
-ALTER TABLE "hk_info" DROP CONSTRAINT "hk_info_pkey",
-ALTER COLUMN "id" SET DATA TYPE SERIAL,
-ALTER COLUMN "scholar_id" SET DATA TYPE INTEGER,
-ALTER COLUMN "campus_id" SET DATA TYPE INTEGER,
-ADD CONSTRAINT "hk_info_pkey" PRIMARY KEY ("id");
-
--- AlterTable
-ALTER TABLE "scholar" DROP CONSTRAINT "scholar_pkey",
-ALTER COLUMN "id" SET DATA TYPE SERIAL,
-ADD CONSTRAINT "scholar_pkey" PRIMARY KEY ("id");
-
--- AlterTable
-ALTER TABLE "trusted_device" ALTER COLUMN "account_id" SET DATA TYPE INTEGER;
+    CONSTRAINT "coordinator_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "semester" (
@@ -93,6 +84,40 @@ CREATE TABLE "semester" (
     "deleted_at" TIMESTAMP(3),
 
     CONSTRAINT "semester_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "scholar" (
+    "id" SERIAL NOT NULL,
+    "first_name" TEXT NOT NULL,
+    "middle_name" TEXT,
+    "last_name" TEXT,
+    "student_number" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "contact_number" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "birthdate" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+    "deleted_at" TIMESTAMP(3),
+    "role" TEXT DEFAULT 'scholar',
+
+    CONSTRAINT "scholar_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "hk_info" (
+    "id" SERIAL NOT NULL,
+    "hk_number" TEXT,
+    "hk_type" TEXT NOT NULL,
+    "year_starter" INTEGER NOT NULL,
+    "scholar_id" INTEGER NOT NULL,
+    "campus_id" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+    "deleted_at" TIMESTAMP(3),
+
+    CONSTRAINT "hk_info_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
