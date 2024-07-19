@@ -127,10 +127,12 @@ class CoordinatorController {
     }
 
     async list(req: Request, res: Response) {
+        const page = parseInt(req.query.page as string) || 1;
+        const pageSize = parseInt(req.query.pageSize as string) || 10;
         try {
-            const coordinators = await CoordinatorListAction.execute();
+            const { coordinators, total } = await CoordinatorListAction.execute(page, pageSize);
 
-            if (coordinators.length === 0) {
+            if (!coordinators) {
                 return AppResponse.sendError({
                     res: res,
                     data: null,
@@ -138,10 +140,18 @@ class CoordinatorController {
                     code: 404,
                 });
             }
-
+            const totalPages = Math.ceil(total / pageSize);
             return AppResponse.sendSuccess({
                 res: res,
-                data: coordinators,
+                data: {
+                    coordinators,
+                    pagination: {
+                        total,
+                        page,
+                        pageSize,
+                        totalPages
+                    }
+                },
                 message: "Coordinators retrieved successfully",
                 code: 200,
             });

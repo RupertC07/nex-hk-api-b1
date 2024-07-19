@@ -82,6 +82,7 @@ const campusController = new CampusController();
 campusRoute.post(
     "/create",
     apiKeyAuth,
+    AdminMiddleware.authToken,
     campusController.create,
 );
 
@@ -168,6 +169,7 @@ campusRoute.post(
 campusRoute.put(
     "/update/:id",
     apiKeyAuth,
+    AdminMiddleware.authToken,
     campusController.update
 );
 
@@ -231,6 +233,7 @@ campusRoute.put(
 campusRoute.get(
     "/show/:id",
     apiKeyAuth,
+    AdminMiddleware.authToken,
     campusController.show
 );
 
@@ -276,14 +279,15 @@ campusRoute.get(
 campusRoute.get(
     "/list",
     apiKeyAuth,
+    AdminMiddleware.authToken,
     campusController.list
 );
 
 /**
  * @swagger
- * /api/v2/campus/show/{id}:
- *   get:
- *     summary: Get a campus by ID
+ * /api/v2/campus/delete/{id}:
+ *   delete:
+ *     summary: Delete a campus by ID
  *     tags: [Campus]
  *     security:
  *       - apiKeyAuth: []
@@ -296,7 +300,7 @@ campusRoute.get(
  *         description: The campus ID
  *     responses:
  *       200:
- *         description: Campus retrieved successfully
+ *         description: Campus deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -340,6 +344,7 @@ campusRoute.get(
 campusRoute.delete(
     "/delete/:id",
     apiKeyAuth,
+    AdminMiddleware.authToken,
     campusController.delete
 );
 

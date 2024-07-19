@@ -53,6 +53,15 @@ class CampusController {
 
             const campus = await CampusUpdateAction.execute(parseInt(id), req.body);
 
+            if (!campus) {
+                return AppResponse.sendError({
+                    res: res,
+                    data: null,
+                    message: "Campus not found",
+                    code: 400
+                })
+            }
+
             return AppResponse.sendSuccess({
                 res: res,
                 data: campus,
@@ -100,10 +109,12 @@ class CampusController {
     }
 
     async list(req: Request, res: Response) {
+        const page = parseInt(req.query.page as string) || 1;
+        const pageSize = parseInt(req.query.pageSize as string) || 10;
         try {
-            const campuses = await CampusListAction.execute();
+            const { campuses, total } = await CampusListAction.execute(page, pageSize);
 
-            if (campuses.length === 0) {
+            if (!campuses) {
                 return AppResponse.sendError({
                     res: res,
                     data: null,
@@ -112,9 +123,19 @@ class CampusController {
                 });
             }
 
+            const totalPages = Math.ceil(total / pageSize);
+
             return AppResponse.sendSuccess({
                 res: res,
-                data: campuses,
+                data: {
+                    campuses,
+                    pagination: {
+                        total,
+                        page,
+                        pageSize,
+                        totalPages
+                    }
+                },
                 message: "Campuses retrieved successfully",
                 code: 200,
             });

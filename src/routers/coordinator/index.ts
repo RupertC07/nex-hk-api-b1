@@ -1,6 +1,7 @@
 import { Router } from "express";
 import CoordinatorController from "../../controllers/coordinator/coorController";
 import apiKeyAuth from "../../middlewares/apiKey";
+import AdminMiddleware from "../../middlewares/admin";
 
 const coordinatorRoute = Router();
 const coordinatorController = new CoordinatorController();
@@ -364,30 +365,35 @@ const coordinatorController = new CoordinatorController();
 coordinatorRoute.post(
     "/create",
     apiKeyAuth,
+    AdminMiddleware.authToken,
     coordinatorController.create
 );
 
 coordinatorRoute.put(
     "/update/:id",
     apiKeyAuth,
+    AdminMiddleware.authToken,
     coordinatorController.update
 );
 
 coordinatorRoute.get(
     "/show/:id",
     apiKeyAuth,
+    AdminMiddleware.authToken,
     coordinatorController.show
 );
 
 coordinatorRoute.get(
     "/list",
     apiKeyAuth,
+    AdminMiddleware.authToken,
     coordinatorController.list
 );
 
 coordinatorRoute.delete(
     "/delete/:id",
     apiKeyAuth,
+    AdminMiddleware.authToken,
     coordinatorController.delete
 );
 
