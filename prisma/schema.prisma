@@ -139,7 +139,7 @@ model Coordinator {
 
 model Semester {
   id                     Int                      @id @default(autoincrement())
-  term                   SemTerm
+  term                   SemTerm?
   sy                     String
   status                 SemStatus?               @default(Active)
   created_at             DateTime?                @default(now())
@@ -182,7 +182,7 @@ model Scholar {
 model HkInfo {
   id           Int       @id @default(autoincrement())
   hk_number    String?
-  hk_type      HkType
+  hk_type      HkType?
   year_started Int
   scholar_id   Int
   campus_id    Int
@@ -281,7 +281,7 @@ model QrCode {
   qr_holder_id    Int
   code            String
   expiration_date DateTime?
-  type            QrType       @default(Regular)
+  type            QrType?      @default(Regular)
   hours           Int?
   minutes         Int?
   purpose         String?
@@ -353,7 +353,7 @@ model DutyScheduleAssignment {
 }
 
 model DutyRecord {
-  id             Int              @id @default(autoincrement())
+  id             Int               @id @default(autoincrement())
   scholar_id     Int
   schedule_id    Int?
   semester_id    Int
@@ -361,9 +361,9 @@ model DutyRecord {
   hours          String
   minutes        String
   qr_code_id     Int
-  status         DutyRecordStatus @default(Pending)
-  created_at     DateTime?        @default(now())
-  updated_at     DateTime?        @updatedAt
+  status         DutyRecordStatus? @default(Pending)
+  created_at     DateTime?         @default(now())
+  updated_at     DateTime?         @updatedAt
   deleted_at     DateTime?
 
   scholar  Scholar       @relation(fields: [scholar_id], references: [id])
@@ -375,15 +375,15 @@ model DutyRecord {
 }
 
 model AdminLogs {
-  id          Int        @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   admin_id    Int
   action      String
   description String
-  status      LogsStatus @default(Success)
+  status      LogsStatus? @default(Success)
   oldData     Json?
   newData     Json?
-  created_at  DateTime?  @default(now())
-  updated_at  DateTime?  @updatedAt
+  created_at  DateTime?   @default(now())
+  updated_at  DateTime?   @updatedAt
   deleted_at  DateTime?
 
   admin Admin @relation(fields: [admin_id], references: [id])
@@ -392,15 +392,15 @@ model AdminLogs {
 }
 
 model CoordinatorLogs {
-  id             Int        @id @default(autoincrement())
+  id             Int         @id @default(autoincrement())
   coordinator_id Int
   action         String
   description    String
-  status         LogsStatus @default(Success)
+  status         LogsStatus? @default(Success)
   oldData        Json?
   newData        Json?
-  created_at     DateTime?  @default(now())
-  updated_at     DateTime?  @updatedAt
+  created_at     DateTime?   @default(now())
+  updated_at     DateTime?   @updatedAt
   deleted_at     DateTime?
 
   coordinator Coordinator @relation(fields: [coordinator_id], references: [id])
@@ -409,15 +409,15 @@ model CoordinatorLogs {
 }
 
 model ScholarLogs {
-  id          Int        @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   scholar_id  Int
   action      String
   description String
-  status      LogsStatus @default(Success)
+  status      LogsStatus? @default(Success)
   oldData     Json?
   newData     Json?
-  created_at  DateTime?  @default(now())
-  updated_at  DateTime?  @updatedAt
+  created_at  DateTime?   @default(now())
+  updated_at  DateTime?   @updatedAt
   deleted_at  DateTime?
 
   scholar Scholar @relation(fields: [scholar_id], references: [id])
@@ -426,15 +426,15 @@ model ScholarLogs {
 }
 
 model QrHolderLogs {
-  id           Int        @id @default(autoincrement())
+  id           Int         @id @default(autoincrement())
   qr_holder_id Int
   action       String
   description  String
-  status       LogsStatus @default(Success)
+  status       LogsStatus? @default(Success)
   oldData      Json?
   newData      Json?
-  created_at   DateTime?  @default(now())
-  updated_at   DateTime?  @updatedAt
+  created_at   DateTime?   @default(now())
+  updated_at   DateTime?   @updatedAt
   deleted_at   DateTime?
 
   qr_holder QrHolder @relation(fields: [qr_holder_id], references: [id])
