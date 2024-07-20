@@ -1,0 +1,1 @@
+{"version":3,"file":"coorShowAction.js","sourceRoot":"","sources":["../../../src/actions/coordinator/coorShowAction.ts"],"names":[],"mappings":";;;;;;;;;;;;;;AAAA,gEAAwC;AAExC,MAAM,qBAAqB;IACvB,MAAM,CAAO,OAAO,CAAC,EAAU;;YAC3B,OAAO,MAAM,gBAAM,CAAC,WAAW,CAAC,SAAS,CAAC;gBACtC,KAAK,EAAE;oBACH,EAAE;oBACF,UAAU,EAAE,IAAI;iBACnB;aACJ,CAAC,CAAC;QACP,CAAC;KAAA;CACJ;AAED,kBAAe,qBAAqB,CAAC"}
