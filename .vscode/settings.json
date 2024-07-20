@@ -8,6 +8,9 @@
     "vs-code-prettier-eslint.prettierLast": false,
     "[prisma]": {
       "editor.defaultFormatter": "Prisma.prisma"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "vscode.typescript-language-features"
     } // set as "true" to run 'prettier' last not first
   }
   
