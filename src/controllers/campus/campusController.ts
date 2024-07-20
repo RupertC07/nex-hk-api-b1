@@ -5,6 +5,7 @@ import CampusShowAction from "../../actions/campus/campusShowAction";
 import CampusListAction from "../../actions/campus/campusListAction";
 import CampusDeleteAction from "../../actions/campus/campusDeleteAction";
 import AppResponse from "../../utils/AppResponse";
+import config from "../../config";
 
 class CampusController {
     async create(req: Request, res: Response) {
@@ -31,7 +32,10 @@ class CampusController {
             return AppResponse.sendError({
                 res: res,
                 data: null,
-                message: `Internal server error: ${error.message}`,
+                message:
+                    config.app.env == "development"
+                        ? error.message
+                        : "Internal Server Error",
                 code: 500,
             });
         }
@@ -72,7 +76,10 @@ class CampusController {
             return AppResponse.sendError({
                 res: res,
                 data: null,
-                message: `Internal server error: ${error.message}`,
+                message:
+                    config.app.env == "development"
+                        ? error.message
+                        : "Internal Server Error",
                 code: 500,
             });
         }
@@ -102,7 +109,10 @@ class CampusController {
             return AppResponse.sendError({
                 res: res,
                 data: null,
-                message: `Internal server error: ${error.message}`,
+                message:
+                    config.app.env == "development"
+                        ? error.message
+                        : "Internal Server Error",
                 code: 500,
             });
         }
@@ -143,7 +153,10 @@ class CampusController {
             return AppResponse.sendError({
                 res: res,
                 data: null,
-                message: `Internal server error: ${error.message}`,
+                message:
+                    config.app.env == "development"
+                        ? error.message
+                        : "Internal Server Error",
                 code: 500,
             });
         }
@@ -173,7 +186,10 @@ class CampusController {
             return AppResponse.sendError({
                 res: res,
                 data: null,
-                message: `Internal server error: ${error.message}`,
+                message:
+                    config.app.env == "development"
+                        ? error.message
+                        : "Internal Server Error",
                 code: 500,
             });
         }

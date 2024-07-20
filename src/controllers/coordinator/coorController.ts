@@ -6,6 +6,7 @@ import CoordinatorListAction from "../../actions/coordinator/coorListAction";
 import CoordinatorDeleteAction from "../../actions/coordinator/coorDeleteAction";
 import prisma from "../../utils/client";
 import AppResponse from "../../utils/AppResponse";
+import config from "../../config";
 
 class CoordinatorController {
     async create(req: Request, res: Response) {
@@ -45,7 +46,10 @@ class CoordinatorController {
             return AppResponse.sendError({
                 res: res,
                 data: null,
-                message: `Internal server error: ${error.message}`,
+                message:
+                    config.app.env == "development"
+                        ? error.message
+                        : "Internal Server Error",
                 code: 500,
             });
         }
@@ -90,7 +94,10 @@ class CoordinatorController {
             return AppResponse.sendError({
                 res: res,
                 data: null,
-                message: `Internal server error: ${error.message}`,
+                message:
+                    config.app.env == "development"
+                        ? error.message
+                        : "Internal Server Error",
                 code: 500,
             });
         }
@@ -120,7 +127,10 @@ class CoordinatorController {
             return AppResponse.sendError({
                 res: res,
                 data: null,
-                message: `Internal server error: ${error.message}`,
+                message:
+                    config.app.env == "development"
+                        ? error.message
+                        : "Internal Server Error",
                 code: 500,
             });
         }
@@ -159,7 +169,10 @@ class CoordinatorController {
             return AppResponse.sendError({
                 res: res,
                 data: null,
-                message: `Internal server error: ${error.message}`,
+                message:
+                    config.app.env == "development"
+                        ? error.message
+                        : "Internal Server Error",
                 code: 500,
             });
         }
@@ -189,7 +202,10 @@ class CoordinatorController {
             return AppResponse.sendError({
                 res: res,
                 data: null,
-                message: `Internal server error: ${error.message}`,
+                message:
+                    config.app.env == "development"
+                        ? error.message
+                        : "Internal Server Error",
                 code: 500,
             });
         }
