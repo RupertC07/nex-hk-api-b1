@@ -1,0 +1,1 @@
+{"version":3,"file":"campusShowAction.js","sourceRoot":"","sources":["../../../src/actions/campus/campusShowAction.ts"],"names":[],"mappings":";;;;;;;;;;;;;;AAAA,gEAAwC;AAExC,MAAM,gBAAgB;IAClB,MAAM,CAAO,OAAO,CAAC,EAAU;;YAC3B,OAAO,MAAM,gBAAM,CAAC,MAAM,CAAC,UAAU,CAAC;gBAClC,KAAK,EAAE;oBACH,EAAE;oBACF,UAAU,EAAE,IAAI;iBACnB;aACJ,CAAC,CAAC;QACP,CAAC;KAAA;CACJ;AAED,kBAAe,gBAAgB,CAAC"}
