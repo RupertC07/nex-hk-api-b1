@@ -82,7 +82,7 @@ const campusController = new CampusController();
 campusRoute.post(
     "/create",
     apiKeyAuth,
-    AdminMiddleware.authToken,
+    authToken([UserRole.admin]),
     campusController.create,
 );
 
@@ -169,7 +169,7 @@ campusRoute.post(
 campusRoute.put(
     "/update/:id",
     apiKeyAuth,
-    AdminMiddleware.authToken,
+    authToken([UserRole.admin]),
     campusController.update
 );
 
@@ -233,7 +233,7 @@ campusRoute.put(
 campusRoute.get(
     "/show/:id",
     apiKeyAuth,
-    AdminMiddleware.authToken,
+    authToken([UserRole.admin]),
     campusController.show
 );
 
@@ -279,7 +279,7 @@ campusRoute.get(
 campusRoute.get(
     "/list",
     apiKeyAuth,
-    AdminMiddleware.authToken,
+    authToken([UserRole.admin]),
     campusController.list
 );
 
@@ -344,7 +344,7 @@ campusRoute.get(
 campusRoute.delete(
     "/delete/:id",
     apiKeyAuth,
-    AdminMiddleware.authToken,
+    authToken([UserRole.admin]),
     campusController.delete
 );
 

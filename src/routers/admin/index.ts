@@ -8,7 +8,9 @@ import {
   sessionResetValidation,
 } from "../../middlewares/session";
 import apiKeyAuth from "../../middlewares/apiKey";
-import AdminMiddleware from "../../middlewares/admin";
+// import AdminMiddleware from "../../middlewares/admin";
+import { authToken } from "../../middlewares/auth";
+import { UserRole } from "@prisma/client";
 
 const adminRoute = Router();
 const adminController = new AdminController();
@@ -375,7 +377,7 @@ adminRoute.put(
 adminRoute.get(
   "/profile",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   adminController.get
 );
 
@@ -534,7 +536,7 @@ adminRoute.get(
 adminRoute.post(
   "/update",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   adminController.update
 );
 /**
@@ -646,7 +648,7 @@ adminRoute.post(
 adminRoute.post(
   "/change-password",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   adminController.changePassword
 );
 

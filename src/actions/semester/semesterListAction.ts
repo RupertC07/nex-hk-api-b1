@@ -1,21 +1,21 @@
 // src/actions/DutyListAction.ts
-import { Prisma } from "@prisma/client";
+import { Prisma, SemTerm } from "@prisma/client";
 import prisma from "../../utils/client";
-import { DutyListParams } from "../../types/filterInterfaces";
+import { SearchListParams } from "../../types/filterInterfaces";
 
 class SemesterListAction {
   static async execute({
     search = null,
     page = 1,
     perPage = 5,
-  }: DutyListParams) {
+  }: SearchListParams) {
     const where: Prisma.SemesterWhereInput = {
       deleted_at: null,
       OR: search
         ? [
-            { sy: { contains: search, mode: "insensitive" } },
-            { term: { contains: search, mode: "insensitive" } },
-          ]
+          { sy: { contains: search, mode: "insensitive" } },
+          { term: { equals: search as SemTerm } },
+        ]
         : undefined,
     };
 

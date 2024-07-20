@@ -1,7 +1,9 @@
 import { Router } from "express";
 import CoordinatorController from "../../controllers/coordinator/coorController";
 import apiKeyAuth from "../../middlewares/apiKey";
-import AdminMiddleware from "../../middlewares/admin";
+// import AdminMiddleware from "../../middlewares/admin";
+import { authToken } from "../../middlewares/auth";
+import { UserRole } from "@prisma/client";
 
 const coordinatorRoute = Router();
 const coordinatorController = new CoordinatorController();
@@ -365,35 +367,35 @@ const coordinatorController = new CoordinatorController();
 coordinatorRoute.post(
     "/create",
     apiKeyAuth,
-    AdminMiddleware.authToken,
+    authToken([UserRole.admin]),
     coordinatorController.create
 );
 
 coordinatorRoute.put(
     "/update/:id",
     apiKeyAuth,
-    AdminMiddleware.authToken,
+    authToken([UserRole.admin]),
     coordinatorController.update
 );
 
 coordinatorRoute.get(
     "/show/:id",
     apiKeyAuth,
-    AdminMiddleware.authToken,
+    authToken([UserRole.admin]),
     coordinatorController.show
 );
 
 coordinatorRoute.get(
     "/list",
     apiKeyAuth,
-    AdminMiddleware.authToken,
+    authToken([UserRole.admin]),
     coordinatorController.list
 );
 
 coordinatorRoute.delete(
     "/delete/:id",
     apiKeyAuth,
-    AdminMiddleware.authToken,
+    authToken([UserRole.admin]),
     coordinatorController.delete
 );
 

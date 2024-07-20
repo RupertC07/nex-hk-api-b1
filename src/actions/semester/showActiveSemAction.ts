@@ -1,10 +1,11 @@
+import { SemStatus } from "../../config/constants";
 import prisma from "../../utils/client";
 
 class ShowActiveSemAction {
   static async execute() {
     return await prisma.semester.findFirst({
       where: {
-        status: "active",
+        status: SemStatus.Active,
         deleted_at: null,
       },
     });

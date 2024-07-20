@@ -10,6 +10,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  admin
+  coordinator
+  scholar
+  qr_holder
+}
+
+enum QrType {
+  Regular
+  Special
+  Custom
+}
+
+enum LogsStatus {
+  Success
+  Failed
+}
+
+enum SemStatus {
+  Active
+  Inactive
+}
+
+enum SemTerm {
+  First
+  Second
+}
+
+enum HkType {
+  HK100
+  HK75
+  HK50
+  HK25
+}
+
+enum DutyRecordStatus {
+  Pending
+  Approved
+  Declined
+  Void
+}
+
 model Admin {
   id             Int         @id @default(autoincrement())
   first_name     String
@@ -17,7 +59,7 @@ model Admin {
   birthdate      String?
   email          String
   contact_number String?
-  role           String      @default("admin")
+  role           UserRole?   @default(admin)
   created_at     DateTime?   @default(now())
   updated_at     DateTime?   @updatedAt
   account        Account[]
@@ -83,7 +125,7 @@ model Coordinator {
   email          String
   contact_number String
   campus_id      Int
-  role           String?   @default("coordinator")
+  role           UserRole? @default(coordinator)
   created_at     DateTime? @default(now())
   updated_at     DateTime? @updatedAt
   deleted_at     DateTime?
@@ -97,9 +139,9 @@ model Coordinator {
 
 model Semester {
   id                     Int                      @id @default(autoincrement())
-  term                   String
+  term                   SemTerm
   sy                     String
-  status                 String?                  @default("active")
+  status                 SemStatus?               @default(Active)
   created_at             DateTime?                @default(now())
   updated_at             DateTime?                @updatedAt
   deleted_at             DateTime?
@@ -124,7 +166,7 @@ model Scholar {
   created_at             DateTime?                @default(now())
   updated_at             DateTime?                @updatedAt
   deleted_at             DateTime?
-  role                   String?                  @default("scholar")
+  role                   UserRole?                @default(scholar)
   hk_info                HkInfo[]
   Account                Account[]
   ScholarGuardian        ScholarGuardian[]
@@ -140,8 +182,8 @@ model Scholar {
 model HkInfo {
   id           Int       @id @default(autoincrement())
   hk_number    String?
-  hk_type      String
-  year_starter Int
+  hk_type      HkType
+  year_started Int
   scholar_id   Int
   campus_id    Int
   created_at   DateTime? @default(now())
@@ -224,7 +266,7 @@ model QrHolder {
   department     String
   email          String
   contact_number String
-  role           String?        @default("qr_holder")
+  role           UserRole?      @default(qr_holder)
   created_at     DateTime?      @default(now())
   updated_at     DateTime?      @updatedAt
   deleted_at     DateTime?
@@ -239,7 +281,7 @@ model QrCode {
   qr_holder_id    Int
   code            String
   expiration_date DateTime?
-  type            String?      @default("regular")
+  type            QrType       @default(Regular)
   hours           Int?
   minutes         Int?
   purpose         String?
@@ -311,18 +353,17 @@ model DutyScheduleAssignment {
 }
 
 model DutyRecord {
-  id             Int       @id @default(autoincrement())
+  id             Int              @id @default(autoincrement())
   scholar_id     Int
   schedule_id    Int?
   semester_id    Int
   computed_hours Int
   hours          String
   minutes        String
-  type           String?   @default("regular")
   qr_code_id     Int
-  status         String?   @default("pending")
-  created_at     DateTime? @default(now())
-  updated_at     DateTime? @updatedAt
+  status         DutyRecordStatus @default(Pending)
+  created_at     DateTime?        @default(now())
+  updated_at     DateTime?        @updatedAt
   deleted_at     DateTime?
 
   scholar  Scholar       @relation(fields: [scholar_id], references: [id])
@@ -334,15 +375,15 @@ model DutyRecord {
 }
 
 model AdminLogs {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   admin_id    Int
   action      String
   description String
-  status      String    @default("Success")
+  status      LogsStatus @default(Success)
   oldData     Json?
   newData     Json?
-  created_at  DateTime? @default(now())
-  updated_at  DateTime? @updatedAt
+  created_at  DateTime?  @default(now())
+  updated_at  DateTime?  @updatedAt
   deleted_at  DateTime?
 
   admin Admin @relation(fields: [admin_id], references: [id])
@@ -351,15 +392,15 @@ model AdminLogs {
 }
 
 model CoordinatorLogs {
-  id             Int       @id @default(autoincrement())
+  id             Int        @id @default(autoincrement())
   coordinator_id Int
   action         String
   description    String
-  status         String    @default("Success")
+  status         LogsStatus @default(Success)
   oldData        Json?
   newData        Json?
-  created_at     DateTime? @default(now())
-  updated_at     DateTime? @updatedAt
+  created_at     DateTime?  @default(now())
+  updated_at     DateTime?  @updatedAt
   deleted_at     DateTime?
 
   coordinator Coordinator @relation(fields: [coordinator_id], references: [id])
@@ -368,15 +409,15 @@ model CoordinatorLogs {
 }
 
 model ScholarLogs {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   scholar_id  Int
   action      String
   description String
-  status      String    @default("Success")
+  status      LogsStatus @default(Success)
   oldData     Json?
   newData     Json?
-  created_at  DateTime? @default(now())
-  updated_at  DateTime? @updatedAt
+  created_at  DateTime?  @default(now())
+  updated_at  DateTime?  @updatedAt
   deleted_at  DateTime?
 
   scholar Scholar @relation(fields: [scholar_id], references: [id])
@@ -385,15 +426,15 @@ model ScholarLogs {
 }
 
 model QrHolderLogs {
-  id           Int       @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   qr_holder_id Int
   action       String
   description  String
-  status       String    @default("Success")
+  status       LogsStatus @default(Success)
   oldData      Json?
   newData      Json?
-  created_at   DateTime? @default(now())
-  updated_at   DateTime? @updatedAt
+  created_at   DateTime?  @default(now())
+  updated_at   DateTime?  @updatedAt
   deleted_at   DateTime?
 
   qr_holder QrHolder @relation(fields: [qr_holder_id], references: [id])

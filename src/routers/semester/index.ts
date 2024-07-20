@@ -1,7 +1,9 @@
 import { Router } from "express";
 import SemesterController from "../../controllers/semester/semesterController";
 import apiKeyAuth from "../../middlewares/apiKey";
-import AdminMiddleware from "../../middlewares/admin";
+// import AdminMiddleware from "../../middlewares/admin";
+import { authToken } from "../../middlewares/auth";
+import { UserRole } from "@prisma/client";
 
 const semRouter = Router();
 const semController = new SemesterController();
@@ -113,7 +115,7 @@ const semController = new SemesterController();
 semRouter.post(
   "/",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   semController.create
 );
 
@@ -209,7 +211,7 @@ semRouter.post(
 semRouter.put(
   "/activate/:id",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   semController.activate
 );
 
@@ -267,7 +269,7 @@ semRouter.put(
 semRouter.put(
   "/deactivate",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   semController.deactivate
 );
 /**
@@ -390,7 +392,7 @@ semRouter.put(
 semRouter.put(
   "/:id",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   semController.update
 );
 
@@ -503,7 +505,7 @@ semRouter.put(
  *                   example: 500
  */
 
-semRouter.get("/", apiKeyAuth, AdminMiddleware.authToken, semController.list);
+semRouter.get("/", apiKeyAuth, authToken([UserRole.admin]), semController.list);
 
 /**
  * @swagger
@@ -586,7 +588,7 @@ semRouter.get("/", apiKeyAuth, AdminMiddleware.authToken, semController.list);
 semRouter.get(
   "/active",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   semController.showActive
 );
 
@@ -673,7 +675,7 @@ semRouter.get(
 semRouter.get(
   "/:id",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   semController.show
 );
 /**
@@ -739,7 +741,7 @@ semRouter.get(
 semRouter.delete(
   "/:id",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   semController.delete
 );
 

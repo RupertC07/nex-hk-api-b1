@@ -1,8 +1,9 @@
 import { Router } from "express";
 import DutyController from "../../controllers/duty/dutyController";
 import apiKeyAuth from "../../middlewares/apiKey";
-import AdminMiddleware from "../../middlewares/admin";
-
+// import AdminMiddleware from "../../middlewares/admin";
+import { authToken } from "../../middlewares/auth";
+import { UserRole } from "@prisma/client";
 const dutyRoute = Router();
 const dutyController = new DutyController();
 /**
@@ -130,7 +131,7 @@ const dutyController = new DutyController();
 dutyRoute.post(
   "/",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   dutyController.create
 );
 
@@ -283,7 +284,7 @@ dutyRoute.post(
 dutyRoute.put(
   "/:id",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   dutyController.update
 );
 /**
@@ -364,7 +365,7 @@ dutyRoute.put(
 dutyRoute.delete(
   "/:id",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   dutyController.delete
 );
 
@@ -475,7 +476,7 @@ dutyRoute.delete(
  *                   type: integer
  *                   example: 500
  */
-dutyRoute.get("/", apiKeyAuth, AdminMiddleware.authToken, dutyController.list);
+dutyRoute.get("/", apiKeyAuth, authToken([UserRole.admin]), dutyController.list);
 
 /**
  * @swagger
@@ -573,7 +574,7 @@ dutyRoute.get("/", apiKeyAuth, AdminMiddleware.authToken, dutyController.list);
 dutyRoute.get(
   "/:id",
   apiKeyAuth,
-  AdminMiddleware.authToken,
+  authToken([UserRole.admin]),
   dutyController.get
 );
 

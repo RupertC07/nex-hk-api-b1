@@ -1,6 +1,7 @@
 import { Semester } from "@prisma/client";
 import prisma from "../../utils/client";
 import { z } from "zod";
+import { SemTerm, SemStatus } from "../../config/constants";
 
 class UpdateSemesterAction {
   static async execute(
@@ -22,8 +23,8 @@ class UpdateSemesterAction {
     data: Omit<Semester, "id" | "created_at" | "updated_at" | "deleted_at">
   ) {
     const schema = z.object({
-      sy: z.string(),
-      term: z.string(),
+      term: z.nativeEnum(SemTerm),
+      status: z.nativeEnum(SemStatus)
     });
 
     return schema.safeParse(data);

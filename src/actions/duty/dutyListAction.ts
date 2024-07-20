@@ -1,21 +1,21 @@
 // src/actions/DutyListAction.ts
 import { Prisma } from "@prisma/client";
 import prisma from "../../utils/client";
-import { DutyListParams } from "../../types/filterInterfaces";
+import { SearchListParams } from "../../types/filterInterfaces";
 
 class DutyListAction {
   static async execute({
     search = null,
     page = 1,
     perPage = 5,
-  }: DutyListParams) {
+  }: SearchListParams) {
     const where: Prisma.DutyWhereInput = {
       deleted_at: null,
       OR: search
         ? [
-            { name: { contains: search, mode: "insensitive" } },
-            { description: { contains: search, mode: "insensitive" } },
-          ]
+          { name: { contains: search, mode: "insensitive" } },
+          { description: { contains: search, mode: "insensitive" } },
+        ]
         : undefined,
     };
 

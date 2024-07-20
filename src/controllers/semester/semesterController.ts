@@ -10,6 +10,7 @@ import SemesterListAction from "../../actions/semester/semesterListAction";
 import ShowActiveSemAction from "../../actions/semester/showActiveSemAction";
 import ActivateSemesterAction from "../../actions/semester/activateSemesterAction";
 import DeleteSemesterAction from "../../actions/semester/deleteSemesterAction";
+import { SemStatus } from "../../config/constants";
 
 class SemesterController {
   async create(req: Request, res: Response) {
@@ -37,7 +38,7 @@ class SemesterController {
       }
 
       const result = await prisma.$transaction(async (prisma) => {
-        if (validate.data.status == "active") {
+        if (validate.data.status == SemStatus.Active) {
           await DeactivateSemesterAction.execute();
         }
 
