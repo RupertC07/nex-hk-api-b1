@@ -1,5 +1,6 @@
 import { now } from "lodash";
 import prisma from "../../utils/client";
+import { SemStatus } from "../../config/constants";
 
 class DeleteSemesterAction {
   static async execute(id: number) {
@@ -8,7 +9,7 @@ class DeleteSemesterAction {
         id: id,
       },
       data: {
-        status: "inactive",
+        status: SemStatus.Inactive,
         deleted_at: new Date(now()),
       },
     });

@@ -1,6 +1,8 @@
 import { Router } from "express";
 import CampusController from "../../controllers/campus/campusController";
-import AdminMiddleware from "../../middlewares/admin";
+// import AdminMiddleware from "../../middlewares/admin";
+import { authToken } from "../../middlewares/auth";
+import { UserRole } from "@prisma/client";
 import apiKeyAuth from "../../middlewares/apiKey";
 const campusRoute = Router();
 const campusController = new CampusController();
