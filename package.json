@@ -15,7 +15,7 @@
     "db:init": "yarn run db:gen && yarn run db:push",
     "seed": "ts-node src/actions/seeders/index.ts",
     "build": "tsc",
-    "vercel-build": "tsc && yarn run db:init && yarn run seed"
+    "vercel-build": "yarn run build && yarn run db:init && yarn run seed"
   },
   "devDependencies": {
     "@eslint/js": "^9.3.0",
