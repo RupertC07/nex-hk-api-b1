@@ -15,6 +15,7 @@ import AdminGetAction from "../../actions/admin/adminGetAction";
 import bcrypt from "bcrypt";
 
 const mailer = new Mailer();
+let verification_id: any = null;
 
 class AdminController {
   async auth(req: Request, res: Response) {
@@ -38,7 +39,7 @@ class AdminController {
       const admin = await AuthAction.execute(data);
 
       const code = generateOtp(6);
-      const verification_id = await otpSession.generate(
+      verification_id = await otpSession.generate(
         omit(data, ["password"]),
         code,
         req
@@ -60,6 +61,9 @@ class AdminController {
           code: 401,
         });
       }
+
+      await otpSession.revokeSession(req, verification_id);
+
       return AppResponse.sendError({
         res: res,
         data: null,

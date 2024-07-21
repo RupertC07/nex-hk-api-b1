@@ -41,6 +41,8 @@ export const authToken = (allowedRoles: string[]) => {
                 });
             }
 
+            console.log(decodedToken);
+
             if (decodedToken.role == UserRole.admin) {
 
                 const adminId = decodedToken?.id;
@@ -54,6 +56,14 @@ export const authToken = (allowedRoles: string[]) => {
                     });
                 }
                 req.adminData = user
+                next();
+            } else {
+                return AppResponse.sendError({
+                    res: res,
+                    data: null,
+                    message: "Unauthorized",
+                    code: 403,
+                });
             }
 
         } catch (error: any) {
