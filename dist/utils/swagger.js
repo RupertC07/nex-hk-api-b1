@@ -19,11 +19,11 @@ const options = {
         components: {
             securitySchemes: {
                 bearerAuth: {
-                    type: "apiKey",
+                    type: "http",
                     name: "Authorization",
-                    in: "header",
                     scheme: "bearer",
                     bearerFormat: "JWT",
+                    in: "header",
                 },
                 apiKeyAuth: {
                     type: "apiKey",

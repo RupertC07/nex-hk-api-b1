@@ -41,6 +41,7 @@ const authToken = (allowedRoles) => {
                     code: 403,
                 });
             }
+            console.log(decodedToken);
             if (decodedToken.role == client_1.UserRole.admin) {
                 const adminId = decodedToken === null || decodedToken === void 0 ? void 0 : decodedToken.id;
                 const user = yield adminShowAction_1.default.execute(adminId);
@@ -53,6 +54,15 @@ const authToken = (allowedRoles) => {
                     });
                 }
                 req.adminData = user;
+                next();
+            }
+            else {
+                return AppResponse_1.default.sendError({
+                    res: res,
+                    data: null,
+                    message: "Unauthorized",
+                    code: 403,
+                });
             }
         }
         catch (error) {

@@ -24,6 +24,7 @@ const changePassword_1 = __importDefault(require("../../actions/shared/changePas
 const adminGetAction_1 = __importDefault(require("../../actions/admin/adminGetAction"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const mailer = new Mailer_1.default();
+let verification_id = null;
 class AdminController {
     auth(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -43,7 +44,7 @@ class AdminController {
                 }
                 const admin = yield authAction_1.default.execute(data);
                 const code = (0, otpGenerator_1.default)(6);
-                const verification_id = yield session_1.default.generate((0, lodash_1.omit)(data, ["password"]), code, req);
+                verification_id = yield session_1.default.generate((0, lodash_1.omit)(data, ["password"]), code, req);
                 yield mailer.sendVerificationCode(code, String(data.email));
                 return AppResponse_1.default.sendSuccess({
                     res: res,
@@ -61,6 +62,7 @@ class AdminController {
                         code: 401,
                     });
                 }
+                yield session_1.default.revokeSession(req, verification_id);
                 return AppResponse_1.default.sendError({
                     res: res,
                     data: null,
