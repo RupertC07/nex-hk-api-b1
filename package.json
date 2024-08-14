@@ -11,7 +11,7 @@
     "test:email:1": "ts-node src/utils/tests/email_test1.ts",
     "test:email:2": "ts-node src/utils/tests/email_test2.ts",
     "db:gen": "prisma generate",
-    "db:push": "prisma db push --accept-data-loss",
+    "db:push": "prisma db push --force-reset",
     "db:init": "yarn run db:gen && yarn run db:push",
     "seed": "ts-node src/actions/seeders/index.ts",
     "build": "tsc",
